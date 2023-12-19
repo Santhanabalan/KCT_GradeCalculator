@@ -3,13 +3,17 @@ from pdfminer.high_level import extract_text
 
 
 class GradeParser:
+    """A class to parse grades from PDF files and compute SGPA & CGPA."""
+
     def __init__(self, dir_path):
+        """Initialize the GradeParser with the directory path to look for the PDF files."""
         self.dir_path = dir_path
         self.file_paths = self.get_file_paths()
         self.all_grades = []
         self.all_credits = []
 
     def get_file_paths(self):
+        """Return a list of file paths (i.e file_names in default case) for all PDF files in the directory."""
         return [
             os.path.join(self.dir_path, file)
             for file in os.listdir(self.dir_path)
@@ -17,6 +21,7 @@ class GradeParser:
         ]
 
     def parse_pdf_files(self):
+        """Parse the PDF files and return a dictionary of results."""
         results = {}
         for file_path in self.file_paths:
             print(f"Parsing file: {file_path}")
@@ -31,10 +36,12 @@ class GradeParser:
         return results
 
     def compute_gpa(self, grades, credits):
+        """Compute the GPA given a list of corresponding grades and credits."""
         total = sum(grade * credit for grade, credit in zip(grades, credits))
         return round(total / sum(credits), 2)
 
     def print_results(self):
+        """Print the SGPA for each file and the overall CGPA."""
         if not self.file_paths:
             print("No PDF files found in the directory")
             return
