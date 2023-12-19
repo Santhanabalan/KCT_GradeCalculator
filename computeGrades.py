@@ -25,10 +25,27 @@ class GradeParser:
         results = {}
         for file_path in self.file_paths:
             print(f"Parsing file: {file_path}")
-            text = extract_text(file_path)
-            result = [
-                int(line.strip()) for line in text.split("\n") if line.strip().isdigit()
-            ]
+            try:
+                text = extract_text(file_path)
+                result = [
+                    int(line.strip())
+                    for line in text.split("\n")
+                    if line.strip().isdigit()
+                ]
+            except Exception as e:
+                print(
+                    f"Error parsing file: {file_path}\n"
+                    "Unable to extract text from the PDF file\n"
+                    "Report this error to me using Github Issues"
+                )
+            if len(result) % 2 != 0:
+                print(
+                    f"Error parsing file: {file_path}\n"
+                    "The number of grades and credits don't match\n"
+                    "Please check the PDF file and try again"
+                    "Or Report this error to me using Github Issues"
+                )
+                continue
             half = len(result) // 2
             self.all_grades.extend(result[:half])
             self.all_credits.extend(result[half:])
